@@ -34,8 +34,7 @@ def user_dir():
     if sys.platform == 'darwin':
         return os.path.join(homedir, 'Library', 'Jupyter')
     elif os.name == 'nt':
-        appdata = os.environ.get('APPDATA', None)
-        if appdata:
+        if appdata := os.environ.get('APPDATA', None):
             return os.path.join(appdata, 'jupyter')
         else:
             return os.path.join(jupyter_config_dir(), 'data')
@@ -78,13 +77,11 @@ class DevelopCmd(develop):
 
 
 # WARNING: all files generates during setup.py will not end up in the source distribution
-data_files = []
-# Add all the templates
-for (dirpath, dirnames, filenames) in os.walk('share/jupyter/'):
-    if filenames:
-        data_files.append((dirpath, [os.path.join(dirpath, filename) for filename in filenames]))
-
-
+data_files = [
+    (dirpath, [os.path.join(dirpath, filename) for filename in filenames])
+    for dirpath, dirnames, filenames in os.walk('share/jupyter/')
+    if filenames
+]
 setup(
     name='voila-vuetify',
     version="0.5.2",
